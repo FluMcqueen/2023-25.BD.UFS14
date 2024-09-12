@@ -8,6 +8,7 @@ jobs:
     - uses: actions/setup-python@v5
       with:
         python-version: '3.12'
+    - uses: actions/checkout@v4
     - run: ls -la
     - run: python --version
     - run: uname -a
