@@ -12,5 +12,6 @@ jobs:
     - run: ls -la
     - run: python --version
     - run: uname -a
+    - run: pip install -U jsonschema
     - run: pip install -U pytest
     - run: pytest
