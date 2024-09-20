@@ -27,3 +27,8 @@ def test_succo():
 
 def test_errato():
     assert val_wrapper(instance={"name" : "Eggs", "price" : "Invalid"}, schema=schema,) == False
+
+def test_funcoutputsnapshot(snapshot):
+    snapshot.snapshot_dir = "snapshot"
+    pierino = func(5)
+    snapshot.assert_match(str(pierino), "foo_output.txt")
