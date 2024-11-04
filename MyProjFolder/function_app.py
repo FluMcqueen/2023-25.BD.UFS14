@@ -1,5 +1,4 @@
 import azure.functions as func
-import datetime
 import json
 import logging
 import requests
@@ -9,6 +8,8 @@ import re
 import pandas as pd
 
 # Altro codice :)
+
+app = func.FunctionApp()
 
 def get_pdf_link(ingredient_id):
     url = f"https://cir-reports.cir-safety.org/cir-ingredient-status-report/?id={ingredient_id}"
@@ -77,7 +78,6 @@ def highlight_numbers(text):
     
     return text
 
-app = func.FunctionApp()
 
 @app.route(route="MyHttpTrigger", auth_level=func.AuthLevel.ANONYMOUS)
 def MyHttpTrigger(req: func.HttpRequest) -> func.HttpResponse:
