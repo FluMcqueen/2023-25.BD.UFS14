@@ -10,27 +10,6 @@ import pandas as pd
 
 app = func.FunctionApp()
 
-def extract_noael_and_ld50(text_pages):
-    noael_pattern = re.compile(r'(.*?NOAEL.*?\d+\.?\d*\s*[a-zA-Z/]+.*?(\.|$))', re.IGNORECASE)
-    ld50_pattern = re.compile(r'(.*?LD50.*?\d+\.?\d*\s*[a-zA-Z/]+.*?(\.|$))', re.IGNORECASE)
-    
-    noael_matches = []
-    ld50_matches = []
-    
-    for text, page_num in text_pages:
-        lines = text.split("\n")
-        for i, line in enumerate(lines):
-            if re.search(noael_pattern, line):
-                previous_line = lines[i - 1] if i > 0 else ""
-                formatted_match = highlight_numbers(f"{previous_line}\n{line}")
-                noael_matches.append((formatted_match, page_num))
-            if re.search(ld50_pattern, line):
-                previous_line = lines[i - 1] if i > 0 else ""
-                formatted_match = highlight_numbers(f"{previous_line}\n{line}")
-                ld50_matches.append((formatted_match, page_num))
-    
-    return noael_matches, ld50_matches
-
 def echanoael(zuppa):
     noael_matches = []
     div = zuppa.find('div', id='SectionContent')
