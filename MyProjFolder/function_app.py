@@ -108,6 +108,6 @@ def MyHttpTrigger(req: func.HttpRequest) -> func.HttpResponse:
         return func.HttpResponse(noael_matches, dnel_matches)
     else:
         return func.HttpResponse(
-             f"This HTTP triggered function executed successfully. Pass an ingredient in the query string from the list \n  {lista_ing}.",
+             "This HTTP triggered function executed successfully. Pass an ingredient in the query string from the list.",
              status_code=200
         )
