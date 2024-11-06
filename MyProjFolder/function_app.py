@@ -31,6 +31,37 @@ def extract_noael_and_ld50(text_pages):
     
     return noael_matches, ld50_matches
 
+def echanoael(zuppa):
+    noael_matches = []
+    div = zuppa.find('div', id='SectionContent')
+    dl = div.find_all('dl')
+
+    for sez in dl:
+        coldx = sez.find_all('dd')
+        for ddtag in coldx:
+            if ddtag.text == "NOAEL":
+                h3 = ddtag.find_previous('h3')
+                nxt = ddtag.find_next('dd')
+                risp = f"Il NOAEL con queste condizioni:  {h3.text} è  {nxt.text}"
+                noael_matches.append(risp)
+    
+    return noael_matches
+
+def echadnel(zuppa):
+    dnel_matches = []
+    div = zuppa.find('div', id='SectionContent')
+    dl = div.find_all('dl')
+
+    for sez in dl:
+        coldx = sez.find_all('dd')
+        for ddtag in coldx:
+            if ddtag.text == "DNEL (Derived No Effect Level)":
+                h3 = ddtag.find_previous('h3')
+                nxt = ddtag.find_next('dd')
+                risp = f"Il DNEL con queste condizioni:  {h3.text} è  {nxt.text}"
+                dnel_matches.append(risp)
+    
+    return dnel_matches
 
 def highlight_numbers(text):
     text = re.sub(r'(\d+,\d+\.?\d*)', r'<b style="color:red;">\1</b>', text)
@@ -72,7 +103,7 @@ def MyHttpTrigger(req: func.HttpRequest) -> func.HttpResponse:
 
             noael_matches = [(highlight_numbers(noael),) for noael in nl]
             dnel_matches = [(highlight_numbers(dnel),) for dnel in dl]
-            display_echa_results(noael_matches, dnel_matches)
+            return (noael_matches, dnel_matches)
 
         return func.HttpResponse(f"Hello, {ingrediente}. This HTTP triggered function executed successfully.")
     else:
