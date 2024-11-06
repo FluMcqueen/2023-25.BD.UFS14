@@ -103,7 +103,7 @@ def MyHttpTrigger(req: func.HttpRequest) -> func.HttpResponse:
 
             noael_matches = [(highlight_numbers(noael),) for noael in nl]
             dnel_matches = [(highlight_numbers(dnel),) for dnel in dl]
-            return (noael_matches, dnel_matches)
+            return func.HttpResponse(noael_matches, dnel_matches)
 
         return func.HttpResponse(noael_matches, dnel_matches)
     else:
