@@ -105,9 +105,9 @@ def MyHttpTrigger(req: func.HttpRequest) -> func.HttpResponse:
             dnel_matches = [(highlight_numbers(dnel),) for dnel in dl]
             return (noael_matches, dnel_matches)
 
-        return func.HttpResponse(f"Hello, {ingrediente}. This HTTP triggered function executed successfully.")
+        return func.HttpResponse(noael_matches, dnel_matches)
     else:
         return func.HttpResponse(
-             "This HTTP triggered function executed successfully. Pass a ingrediente in the query string or in the request body for a personalized response.",
+             f"This HTTP triggered function executed successfully. Pass an ingredient in the query string from the list \n  {lista_ing}.",
              status_code=200
         )
