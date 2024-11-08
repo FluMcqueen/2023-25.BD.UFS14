@@ -80,11 +80,11 @@ def MyHttpTrigger(req: func.HttpRequest) -> func.HttpResponse:
             dl = echadnel(soup)
             nl = echanoael(soup)
 
-            noael_matches = [(highlight_numbers(noael),) for noael in nl]
-            dnel_matches = [(highlight_numbers(dnel),) for dnel in dl]
-            return func.HttpResponse(noael_matches, dnel_matches)
+            #noael_matches = [func.HttpResponse(noael) for noael in nl]
+            #dnel_matches = [func.HttpResponse(dnel) for dnel in dl]
+            return func.HttpResponse(nl, dl)
 
-        return func.HttpResponse(noael_matches, dnel_matches)
+        return func.HttpResponse("Ingrediente non torvato")
     else:
         return func.HttpResponse(
              "This HTTP triggered function executed successfully. Pass an ingredient in the query string from the list.",
