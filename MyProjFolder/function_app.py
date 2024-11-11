@@ -57,6 +57,11 @@ def highlight_numbers(text):
 def MyHttpTrigger(req: func.HttpRequest) -> func.HttpResponse:
     logging.info('Python HTTP trigger function processed a request.')
 
+    with open('invecchia.json', 'r') as file:
+            echa = json.load(file)
+    lista_ing = list(echa.keys())
+    lista_ing = sorted(lista_ing)
+
     ingrediente = req.params.get('ingrediente')
     if not ingrediente:
         try:
@@ -65,24 +70,24 @@ def MyHttpTrigger(req: func.HttpRequest) -> func.HttpResponse:
             pass
         else:
             ingrediente = req_body.get('ingrediente')
+        return func.HttpResponse(f"Scrivi nella barra di ricerca ?ingrediente=uno della lista\nPer esempio http://127.0.0.1:7071/api/MyHttpTrigger?ingrediente=Aluminium Oxide\n\n{lista_ing}")
 
     if ingrediente:
-        with open('invecchia.json', 'r') as file:
-            echa = json.load(file)
-        lista_ing = list(echa.keys())
 
         urlecha = echa.get(ingrediente)
         if urlecha:
             echalink = "https://echa.europa.eu/it/registration-dossier/-/registered-dossier/"+str(urlecha)+"/7/1"
-            print(f"Link al dossier Echa: [Clicca qui per visualizzare il dossier]({echalink})")
+            #print(f"Link al dossier Echa: [Clicca qui per visualizzare il dossier]({echalink})")
             response = requests.get(echalink)
             soup = BeautifulSoup(response.content, 'html.parser')
             dl = echadnel(soup)
             nl = echanoael(soup)
 
-            #noael_matches = [func.HttpResponse(noael) for noael in nl]
-            #dnel_matches = [func.HttpResponse(dnel) for dnel in dl]
-            return func.HttpResponse(nl, dl)
+            response_body = {
+                "NOAEL": nl,
+                "DNEL": dl
+                        }
+            return func.HttpResponse(json.dumps(response_body), mimetype="application/json", status_code=200)
 
         return func.HttpResponse("Ingrediente non torvato")
     else:
