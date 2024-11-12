@@ -21,8 +21,8 @@ schema = {
     "type" : "object",
     "properties" : {
         "ts" : {"type" : "number"},
-        "Linear" : {"type" : "string"},
-        "Polynomial" : {"type" : "string"},
+        "Linear" : {"type" : "number"},
+        "Polynomial" : {"type" : "number"},
     },
 }
 
@@ -56,7 +56,7 @@ def val_to_json(ts, line, pol, at):
     diz["ts"] = ts
     diz["Linear"] = line
     diz["Polynomial"] = pol
-    test_diz(diz)
+    test_diz(diz, schema)
     # print(diz)
     messaggio = str(diz)
     invia_messaggio(messaggio)
