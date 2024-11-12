@@ -14,7 +14,6 @@ client = mqtt.Client(mqtt.CallbackAPIVersion.VERSION2)
 client._client_id = client_id.encode("utf-8")
 
 topic = 'testtopic/1'
-
 contatore = 0
 
 schema = {
@@ -24,10 +23,8 @@ schema = {
         "Linear" : {"type" : "number"},
         "Polynomial" : {"type" : "number"},
     },
+    "required": ["ts", "Linear", "Polynomial"]
 }
-
-def test_diz(dictionary, schema):
-    validate(instance=dictionary, schema=schema)
 
 def linear(value):
     a_coef = 2.6647E-02
@@ -51,18 +48,21 @@ def invia_messaggio(mess, topic = topic, client = client):
     contatore += 1
     print(f"Inviato questo messaggio: {mess}")
 
-def val_to_json(ts, line, pol, at):
+def val_to_json(ts, line, pol):
     diz = dict()
     diz["ts"] = ts
     diz["Linear"] = line
     diz["Polynomial"] = pol
-    test_diz(diz, schema)
+    return diz
     # print(diz)
-    messaggio = str(diz)
-    invia_messaggio(messaggio)
-    json_str = json.dumps(diz)
-    print("-"*42)
-    call_api(json_str, at)
+
+def messaggi(listadiz, at):
+    for diz in listadiz:
+        messaggio = str(diz)
+        invia_messaggio(messaggio)
+        json_str = json.dumps(diz)
+        print("-"*42)
+        call_api(json_str, at)
 
 def call_api(js, device_token):
     url = f"https://zion.nextind.eu/api/v1/{device_token}/telemetry"
@@ -87,19 +87,27 @@ client.connect(broker, port=port)
 
 client.loop_start()
 
-df = pd.read_csv("Estensimetro.csv", sep=";")
+def main():
+    dixy = []
 
-print(df.head())
-df["Value"] = df["Value"].str.replace(",", ".")
-print("-"*42)
+    df = pd.read_csv("Estensimetro.csv", sep=";")
 
-for _, row in df.iterrows():
-    timestamp = row["Timestamp"]
-    v = row["Value"]
-    at = row["Access token"]
-    v=float(v)
-    lin = linear(v)
-    pol = polynomial(v)
-    val_to_json(timestamp, lin, pol, at)
+    print(df.head())
+    df["Value"] = df["Value"].str.replace(",", ".")
+    print("-"*42)
 
-print(f"Il dataset ha {df.shape[0]} righe e ho inviato {contatore} messaggi")
+    for _, row in df.iterrows():
+        timestamp = row["Timestamp"]
+        v = row["Value"]
+        at = row["Access token"]
+        v=float(v)
+        lin = linear(v)
+        pol = polynomial(v)
+        dixy.append(val_to_json(timestamp, lin, pol))
+        
+    return dixy
+
+@pytest.mark.parametrize("diz", main())
+def test_validate_diz(diz):
+    # Validazione diretta del dizionario usando jsonschema.validate
+    validate(instance=diz, schema=schema)
