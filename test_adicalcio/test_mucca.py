@@ -109,5 +109,5 @@ def main():
 
 @pytest.mark.parametrize("diz", main())
 def test_validate_diz(diz):
-    # Validazione diretta del dizionario usando jsonschema.validate
+    
     validate(instance=diz, schema=schema)
