@@ -111,3 +111,11 @@ def main():
 def test_validate_diz(diz):
     
     validate(instance=diz, schema=schema)
+
+def test_funcsv(snapshot):
+    df = pd.read_csv("Estensimetro.csv", sep=";")
+    stringa = df.head().to_csv(index=True)
+    formaggio = f"""\n{stringa.strip()}\n"""
+
+    snapshot.snapshot_dir = "snapshot"
+    snapshot.assert_match(formaggio, "primerighe.csv")
