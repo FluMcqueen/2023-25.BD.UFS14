@@ -70,7 +70,7 @@ def MyHttpTrigger(req: func.HttpRequest) -> func.HttpResponse:
             pass
         else:
             ingrediente = req_body.get('ingrediente')
-        return func.HttpResponse(f"Scrivi nella barra di ricerca ?ingrediente=uno della lista\nPer esempio http://127.0.0.1:7071/api/MyHttpTrigger?ingrediente=Aluminium oxide\n\n{lista_ing}")
+        return func.HttpResponse(f"Scrivi nella barra di ricerca ?ingrediente=uno della lista\nPer esempio https://func-app-2023-25-bd-faelli.azurewebsites.net/api/myhttptrigger?ingrediente=Aluminium oxide\n\n{lista_ing}")
 
     if ingrediente:
 
